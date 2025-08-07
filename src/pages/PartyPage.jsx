@@ -6,7 +6,7 @@ const PartyPage = () => {
   const [currentPhase, setCurrentPhase] = useState(0);
   const navigate = useNavigate();
 
-  const [countdown, setCountdown] = useState(10);
+  const [countdown, setCountdown] = useState(20);
   const [moiEffects, setMoiEffects] = useState([]);
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const PartyPage = () => {
       setCountdown(prev => {
         if (prev <= 1) {
           navigate('/birthday');
-          return 10;
+          return 20;
         }
         return prev - 1;
       });
@@ -90,7 +90,7 @@ const PartyPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-orange-200 via-red-200 to-pink-200 flex items-center justify-center p-4">
       <div className="max-w-6xl w-full">
         {/* Progress indicator */}
-        <div className="fixed top-4 right-4 z-50 bg-black bg-opacity-70 text-white px-4 py-2 rounded-lg">
+        {/* <div className="fixed top-4 right-4 z-50 bg-black bg-opacity-70 text-white px-4 py-2 rounded-lg">
           <div className="text-sm font-bold">Screen 3/4 - Phase {currentPhase + 1}/3</div>
           <div className="flex space-x-1 mt-1">
             {[0, 1, 2].map((index) => (
@@ -103,7 +103,7 @@ const PartyPage = () => {
             ))}
           </div>
           <div className="text-xs mt-1 text-orange-300">6s per screen</div>
-        </div>
+        </div> */}
 
         <div className="text-center mb-8">
           <h1 className="text-6xl font-bold text-gray-800 mb-4 animate-bounce">
@@ -280,7 +280,7 @@ const PartyPage = () => {
         </div>
 
         {/* Transition hint */}
-        {currentPhase === 2 && (
+        {countdown <= 5 && (
           <div className="text-center mt-8 animate-pulse">
             <div className="bg-yellow-100 border border-yellow-400 rounded-lg p-4 inline-block">
               <div className="text-2xl mb-2">🎂</div>
@@ -298,7 +298,7 @@ const PartyPage = () => {
                 onClick={handleNextScreen}
                 className="bg-gradient-to-r from-orange-500 to-red-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-orange-600 hover:to-red-700 transform hover:scale-105 transition-all duration-300 shadow-lg"
               >
-                Next: Birthday 🎂 →
+                Next →
               </button>
               <div className="text-gray-700 font-medium">
                 Auto in <span className="text-red-600 font-bold text-xl">{countdown}s</span>

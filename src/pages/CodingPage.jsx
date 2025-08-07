@@ -7,7 +7,7 @@ const CodingPage = () => {
   const [showEffects, setShowEffects] = useState(false);
   const navigate = useNavigate();
 
-  const [countdown, setCountdown] = useState(10);
+  const [countdown, setCountdown] = useState(20);
 
   useEffect(() => {
     // Phase transition every 2 seconds (3 phases in 6 seconds)
@@ -21,7 +21,7 @@ const CodingPage = () => {
       setCountdown(prev => {
         if (prev <= 1) {
           navigate('/rallying');
-          return 10;
+          return 20;
         }
         return prev - 1;
       });
@@ -62,7 +62,7 @@ const CodingPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 flex items-center justify-center p-4">
       <div className="max-w-4xl w-full">
         {/* Progress indicator */}
-        <div className="fixed top-4 right-4 z-50 bg-black bg-opacity-70 text-white px-4 py-2 rounded-lg">
+        {/* <div className="fixed top-4 right-4 z-50 bg-black bg-opacity-70 text-white px-4 py-2 rounded-lg">
           <div className="text-sm font-bold">Screen 1/4 - Phase {currentPhase + 1}/3</div>
           <div className="flex space-x-1 mt-1">
             {[0, 1, 2].map((index) => (
@@ -74,7 +74,7 @@ const CodingPage = () => {
               />
             ))}
           </div>
-        </div>
+        </div> */}
 
         <div className="text-center mb-8">
           <h1 className="text-5xl font-bold text-gray-800 mb-4 animate-bounce">
@@ -155,7 +155,7 @@ const CodingPage = () => {
                 onClick={handleNextScreen}
                 className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-lg"
               >
-                Next: Rally Time →
+                Next →
               </button>
               <div className="text-gray-600 font-medium">
                 Auto in <span className="text-blue-600 font-bold text-xl">{countdown}s</span>

@@ -6,6 +6,7 @@ import CodingPage from './pages/CodingPage';
 import RallyingPage from './pages/RallyingPage';
 import PartyPage from './pages/PartyPage';
 import BirthdayPage from './pages/BirthdayPage';
+import AlbumPage from './pages/AlbumPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
       <Route path="/coding" element={<CodingPage />} />
       <Route path="/rallying" element={<RallyingPage />} />
       <Route path="/party" element={<PartyPage />} />
+      <Route path="/album" element={<AlbumPage />} />
       <Route path="/birthday" element={<BirthdayPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

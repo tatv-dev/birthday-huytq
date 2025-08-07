@@ -1,5 +1,5 @@
 // src/pages/BirthdayPage.jsx  
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const BirthdayPage = () => {
@@ -7,9 +7,15 @@ const BirthdayPage = () => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [balloons, setBalloons] = useState([]);
   const [flowers, setFlowers] = useState([]);
+  const [musicPlaying, setMusicPlaying] = useState(false);
+  const audioRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Initialize audio but don't play automatically
+    audioRef.current = new Audio('/audios/khuc_hat_mung_sinh_nhat.mp3');
+    audioRef.current.loop = true;
+
     // Phase transition every 2 seconds
     const phaseInterval = setInterval(() => {
       setCurrentPhase(prev => (prev + 1) % 3);
@@ -52,6 +58,11 @@ const BirthdayPage = () => {
       clearInterval(confettiInterval);
       clearInterval(balloonInterval);
       clearInterval(flowerInterval);
+      // Cleanup audio
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
     };
   }, []);
 
@@ -59,10 +70,24 @@ const BirthdayPage = () => {
     navigate('/');
   };
 
+  const toggleMusic = () => {
+    if (audioRef.current) {
+      if (musicPlaying) {
+        audioRef.current.pause();
+        setMusicPlaying(false);
+      } else {
+        audioRef.current.play().catch((error) => {
+          console.log('Không thể phát nhạc:', error);
+        });
+        setMusicPlaying(true);
+      }
+    }
+  };
+
   const birthdayPhases = [
     {
       mainText: "🎉 CHÚC MỪNG SINH NHẬT SẾP HUY! 🎉",
-      teamText: "Từ toàn bộ 8 thành viên team với tình cảm chân thành nhất! 💝",
+      teamText: "Từ toàn bộ thành viên R&D với tình cảm chân thành nhất! 💝",
       wishText: "Chúc sếp luôn khỏe mạnh, thành công và hạnh phúc!",
       mood: "🎂",
       bgColor: "from-pink-300 via-purple-300 to-indigo-400"
@@ -76,7 +101,7 @@ const BirthdayPage = () => {
     },
     {
       mainText: "🎊 CHÚC TUỔI MỚI THÀNH CÔNG HƠN NỮA! 🎊",
-      teamText: "Từ Huy, Trụ, Hiếu, Tá, Ngọc Anh, Nhàn, Toàn, Hưng - Team 8 người hoàn hảo! 👥",
+      teamText: "Team R&D with love! 👥",
       wishText: "Năm mới, niềm vui mới, thành công mới!",
       mood: "🥳",
       bgColor: "from-green-300 via-blue-300 to-purple-400"
@@ -160,22 +185,6 @@ const BirthdayPage = () => {
       <ConfettiEffect />
       
       <div className="max-w-6xl w-full text-center relative z-10">
-        {/* Progress indicator */}
-        <div className="fixed top-4 right-4 z-50 bg-black bg-opacity-70 text-white px-4 py-2 rounded-lg">
-          <div className="text-sm font-bold">Screen 4/4 - Final 🎂</div>
-          <div className="flex space-x-1 mt-1">
-            {[0, 1, 2].map((index) => (
-              <div
-                key={index}
-                className={`w-2 h-2 rounded-full ${
-                  index <= currentPhase ? 'bg-pink-400' : 'bg-gray-400'
-                }`}
-              />
-            ))}
-          </div>
-          <div className="text-xs mt-1 text-pink-300">Manual restart</div>
-        </div>
-
         {/* Floating birthday elements */}
         <div className="absolute inset-0 pointer-events-none">
           {[...Array(20)].map((_, i) => (
@@ -196,12 +205,13 @@ const BirthdayPage = () => {
 
         <div className="mb-12">
           <div className="text-5xl mb-6 animate-bounce">{birthdayPhases[currentPhase].mood}</div>
-          <h1 className="text-3xl md:text-2xl font-bold text-white mb-6 animate-pulse drop-shadow-lg">
+          <h1 className="text-2xl md:text-3xl font-bold text-white mb-6 animate-pulse drop-shadow-lg">
             {birthdayPhases[currentPhase].mainText}
           </h1>
         </div>
 
-        <div className="bg-white/95 backdrop-blur-lg rounded-3xl p-12 shadow-2xl mb-8 relative">
+        {/* Video Container - Thay thế div cũ */}
+        <div className="bg-white/95 backdrop-blur-lg rounded-3xl p-12 shadow-2xl mb-12 relative overflow-hidden">
           {/* Border decorations */}
           <div className="absolute top-4 left-4 text-3xl animate-spin">🎊</div>
           <div className="absolute top-4 right-4 text-3xl animate-bounce">🎁</div>
@@ -209,16 +219,30 @@ const BirthdayPage = () => {
           <div className="absolute bottom-4 right-4 text-3xl animate-ping">✨</div>
 
           <div className="relative z-10">
-            <p className="text-xl md:text-2xl font-bold text-gray-800 mb-8">
+            {/* Video Element */}
+            <div className="mb-8">
+              <video
+                className="w-full max-w-4xl mx-auto rounded-2xl shadow-lg"
+                controls
+                loop
+                playsInline
+                style={{ maxHeight: '400px' }}
+              >
+                <source src="/public/videos/6882264787851.mp4" type="video/mp4" />
+                <p className="text-gray-600">Trình duyệt của bạn không hỗ trợ video.</p>
+              </video>
+            </div>
+
+            <p className="text-xl md:text-2xl font-bold text-gray-800 mb-4">
               {birthdayPhases[currentPhase].teamText}
             </p>
             
-            <p className="text-base md:text-xl text-gray-700 mb-8">
+            <p className="text-xl md:text-2xl text-gray-700">
               {birthdayPhases[currentPhase].wishText}
             </p>
 
             {/* Team signatures */}
-            <div className="border-t-2 border-gray-200 pt-2">
+            {/* <div className="border-t-2 border-gray-200 pt-4">
               <h3 className="text-xl font-bold text-gray-800 mb-6">🖋️ Ký tên toàn bộ team:</h3>
               
               <div className="grid grid-cols-2 md:grid-cols-8 gap-6">
@@ -237,7 +261,7 @@ const BirthdayPage = () => {
                     className="text-center animate-bounce"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
-                    <div className={`text-base font-bold ${member.color} mb-1`}>
+                    <div className={`text-xl font-bold ${member.color} mb-1`}>
                       {member.name}
                     </div>
                     <div className="text-sm text-gray-500">
@@ -247,47 +271,61 @@ const BirthdayPage = () => {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 
         {/* Special birthday wishes */}
-        <div className="bg-white/90 backdrop-blur-lg rounded-2xl p-4 mb-8">
-          <h3 className="text-xl font-bold text-gray-800 mb-6">🎯 Lời chúc đặc biệt:</h3>
+        {/* <div className="bg-white/90 backdrop-blur-lg rounded-2xl p-4 mb-4">
+          <h3 className="text-2xl font-bold text-gray-800 mb-6">🎯 Lời chúc đặc biệt:</h3>
           
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-gradient-to-br from-red-100 to-pink-200 rounded-xl p-4">
+            <div className="bg-gradient-to-br from-red-100 to-pink-200 rounded-xl p-6">
               <div className="text-4xl mb-3">🏆</div>
               <h4 className="font-bold text-gray-800 mb-2">Thành Công</h4>
               <p className="text-gray-700 text-sm">Chúc sếp đạt được mọi mục tiêu đã đề ra!</p>
             </div>
             
-            <div className="bg-gradient-to-br from-blue-100 to-indigo-200 rounded-xl p-4">
+            <div className="bg-gradient-to-br from-blue-100 to-indigo-200 rounded-xl p-6">
               <div className="text-4xl mb-3">❤️</div>
               <h4 className="font-bold text-gray-800 mb-2">Hạnh Phúc</h4>
               <p className="text-gray-700 text-sm">Chúc sếp luôn vui vẻ và hạnh phúc bên gia đình!</p>
             </div>
             
-            <div className="bg-gradient-to-br from-green-100 to-emerald-200 rounded-xl p-4">
+            <div className="bg-gradient-to-br from-green-100 to-emerald-200 rounded-xl p-6">
               <div className="text-4xl mb-3">💪</div>
               <h4 className="font-bold text-gray-800 mb-2">Sức Khỏe</h4>
               <p className="text-gray-700 text-sm">Chúc sếp luôn dồi dào sức khỏe và năng lượng!</p>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Final celebration */}
         <div className="text-center">
-          <button
-            onClick={() => setShowConfetti(!showConfetti)}
-            className="bg-gradient-to-r from-yellow-400 via-pink-500 to-red-500 text-white px-12 py-6 rounded-full text-2xl font-bold hover:from-yellow-500 hover:via-pink-600 hover:to-red-600 transform hover:scale-110 transition-all duration-300 shadow-2xl animate-pulse mb-6"
-          >
-            🎉 CHÚC MỪNG SINH NHẬT! 🎉
-          </button>
-          
-          <p className="mb-8 text-white text-xl font-semibold drop-shadow-lg">
-            💖 Với tình cảm vô hạn từ Team 8 người! 💖
-          </p>
+          <div className="flex flex-col md:flex-row gap-4 justify-center items-center mb-6">
+            <button
+              onClick={() => setShowConfetti(!showConfetti)}
+              className="bg-gradient-to-r from-yellow-400 via-pink-500 to-red-500 text-white px-8 py-4 rounded-full text-xl font-bold hover:from-yellow-500 hover:via-pink-600 hover:to-red-600 transform hover:scale-110 transition-all duration-300 shadow-2xl animate-pulse"
+            >
+              🎉 CHÚC MỪNG SINH NHẬT! 🎉
+            </button>
+          </div>
+
+          {/* Music control button - Click to play/pause */}
+          <div className="mb-6">
+            <button
+              onClick={toggleMusic}
+              className="bg-white/90 backdrop-blur-lg rounded-full px-6 py-3 shadow-lg hover:bg-white/100 transform hover:scale-105 transition-all duration-300"
+            >
+              <div className="flex items-center space-x-2">
+                <div className="text-2xl">{musicPlaying ? '🎵' : '🔇'}</div>
+                <div className="text-gray-800 font-semibold">
+                  {musicPlaying ? 'Happy Birthday Song Playing!' : 'Click to Play Birthday Song!'}
+                </div>
+                <div className="text-2xl">{musicPlaying ? '🎵' : '🔇'}</div>
+              </div>
+            </button>
+          </div>
 
           {/* Restart button */}
           <button
